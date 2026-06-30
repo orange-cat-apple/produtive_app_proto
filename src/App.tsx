@@ -539,7 +539,7 @@ export default function App() {
       const mins = String(now.getMinutes()).padStart(2, '0');
       const timestampedText = `[SUBMITTED_AT: ${hours}:${mins}] ${brainDump}`;
       
-      const res = await fetch('/api/brain-dump', {
+      const res = await fetch('https://kinetic-api-dt12.onrender.com/api/brain-dump', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ raw_input: timestampedText, todayStr, localTime, macroGoal: monthlyGoalTitle })
@@ -638,7 +638,7 @@ export default function App() {
     setShowQuickWin(true);
     setInlineQuickWin("Consulting Dopamine Bank...");
     try {
-      const res = await fetch("/api/quick-win", {
+      const res = await fetch("https://kinetic-api-dt12.onrender.com/api/quick-win", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
