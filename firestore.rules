@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3: Primitive Definition
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function existing() {
+      return resource.data;
+    }
+    
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    // 2. Validation Blueprints (Anti-Update-Gap)
+    function isValidTask(data) {
+      let hasCorrectKeys = data.keys().hasAll(['userId', 'rawInput', 'timeframeIntent', 'createdAt', 'steps']) && data.keys().size() == 5;
+      let validUserId = data.userId is string && data.userId == request.auth.uid && data.userId.size() <= 128;
+      let validRawInput = data.rawInput is string && data.rawInput.size() <= 10000;
+      let validTimeframeIntent = data.timeframeIntent is string && data.timeframeIntent.size() <= 100;
+      let validCreatedAt = data.createdAt is timestamp;
+      let validSteps = data.steps is list && data.steps.size() <= 100; // Total Array Guarding
+      
+      return hasCorrectKeys && validUserId && validRawInput && validTimeframeIntent && validCreatedAt && validSteps;
+    }
+
+    match /tasks/{taskId} {
+      // Security Constraints:
+      // - Must be signed in.
+      // - List query must explicitly filter by user's own uid to prevent scraping.
+      // - Get requires owner match.
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && isValidId(taskId) && resource.data.userId == request.auth.uid;
+      
+      allow create: if isSignedIn() 
+        && isValidId(taskId) 
+        && isValidTask(incoming())
+        && incoming().createdAt == request.time;
+        
+      allow update: if isSignedIn() 
+        && isValidId(taskId)
+        && existing().userId == request.auth.uid // Ownership check
+        && isValidTask(incoming())
+        // Immutable fields
+        && incoming().userId == existing().userId
+        && incoming().createdAt == existing().createdAt
+        && (
+          // Action: Update Steps or Text
+          incoming().diff(existing()).affectedKeys().hasAny(['steps', 'timeframeIntent', 'rawInput'])
+        );
+        
+      allow delete: if isSignedIn()
+        && isValidId(taskId)
+        && existing().userId == request.auth.uid;
+    }
+  }
+}

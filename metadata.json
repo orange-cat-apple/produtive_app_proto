@@ -1,0 +1,6 @@
+{
+  "name": "Kinetic",
+  "description": "An active, cognitive-prosthetic productivity app designed to manage executive dysfunction and task paralysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

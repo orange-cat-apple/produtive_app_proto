@@ -1,0 +1,33 @@
+{
+  "entities": {
+    "Task": {
+      "title": "Task",
+      "description": "A structured task created from the user's raw input.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "rawInput": { "type": "string" },
+        "timeframeIntent": { "type": "string" },
+        "createdAt": { "type": "timestamp" },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "completed": { "type": "boolean" }
+            },
+            "required": ["text", "completed"]
+          }
+        }
+      },
+      "required": ["userId", "rawInput", "timeframeIntent", "createdAt", "steps"]
+    }
+  },
+  "firestore": {
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "Tasks created by users."
+    }
+  }
+}
