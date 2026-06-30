@@ -1,20 +1,19 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# Kinetic 
 
-# Run and deploy your AI Studio app
+**Kinetic** is an application that aims to make your life productive (thats what we aim to do and given more time and we cna make it more polish)
 
-This contains everything you need to run your app locally.
+### Live Application
+**[Access Kinetic Here](https://kinetic-app-a8e9f.web.app/)**
 
-View your app in AI Studio: https://ai.studio/apps/1456b66e-244b-40d6-8ce8-5e9bd45fd705
-
-## Run Locally
-
-**Prerequisites:**  Node.js
+---
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Tech Stack
+* **Frontend:** React, Vite, Tailwind CSS, Motion (Animations).
+* **Backend:** Node.js (Express) hosted on Render.
+* **AI Engine:** Google Gemini API (2.5 Flash) for intelligent task extraction.
+* **Data & Auth:** Google Firebase (Firestore + Authentication).
+* **Infrastructure:** Firebase Hosting (Global Edge Network).
+
+
+## AI has been used to generate the code
