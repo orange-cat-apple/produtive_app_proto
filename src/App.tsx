@@ -9,6 +9,8 @@ import TaskBankruptcyProtocol from './components/TaskBankruptcyProtocol';
 import BurnoutCircuitBreaker, { CircuitBreakerContext } from './components/BurnoutCircuitBreaker';
 import Vault from './components/Vault';
 
+const API_URL = "https://kinetic-api-dt12.onrender.com";
+
 const SvgMoon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
@@ -286,6 +288,7 @@ const FlowStateTaskCard = ({
     </div>
   );
 };
+
 export default function App() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -539,7 +542,7 @@ export default function App() {
       const mins = String(now.getMinutes()).padStart(2, '0');
       const timestampedText = `[SUBMITTED_AT: ${hours}:${mins}] ${brainDump}`;
       
-      const res = await fetch('/api/brain-dump', {
+      const res = await fetch(`${API_URL}/api/brain-dump`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ raw_input: timestampedText, todayStr, localTime, macroGoal: monthlyGoalTitle })
@@ -638,7 +641,7 @@ export default function App() {
     setShowQuickWin(true);
     setInlineQuickWin("Consulting Dopamine Bank...");
     try {
-      const res = await fetch("/api/quick-win", {
+      const res = await fetch(`${API_URL}/api/quick-win`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

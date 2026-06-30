@@ -9,7 +9,7 @@ import { fileURLToPath } from "url";
 
 dotenv.config();
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = path.resolve();
 const TODAY = new Date().toISOString().split("T")[0];
 
 async function startServer() {
@@ -17,7 +17,11 @@ async function startServer() {
   const PORT = Number(process.env.PORT) || 3000;
 
   app.use(express.json());
-  app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"] }));
+  app.use(cors({
+    origin: 'https://kinetic-app-a8e9f.web.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  }));
 
   const dataStore = {
     userProfile: {
@@ -405,10 +409,9 @@ Generate my quick win.
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(
-      `[Kinetic] Server live on port ${PORT} | Model: gemini-2.5-flash | Store: in-memory | Archetype: pending`
-    );
+  // --- UPDATED LISTEN BLOCK ---
+  app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
   });
 }
 
